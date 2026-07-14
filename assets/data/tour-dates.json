@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-07-14",
+    "displayDate": "JUL 14, 2026",
+    "venue": "PORDENONE BLUES & CO. FESTIVAL",
+    "location": "PORDENONE, ITALY",
+    "ticketsUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator",
+    "vipUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator"
+  },
+  {
+    "date": "2026-08-02",
+    "displayDate": "AUG 02, 2026",
+    "venue": "PLACEHOLDER VENUE NAME",
+    "location": "PLACEHOLDER CITY, COUNTRY",
+    "ticketsUrl": "#",
+    "vipUrl": null
+  },
+  {
+    "date": "2026-09-19",
+    "displayDate": "SEP 19, 2026",
+    "venue": "PLACEHOLDER VENUE NAME",
+    "location": "PLACEHOLDER CITY, COUNTRY",
+    "ticketsUrl": "#",
+    "vipUrl": "#"
+  }
+]
