@@ -11,23 +11,15 @@ supabaseClient.auth.getSession().then((result) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const authModal = document.getElementById('auth-modal');
-  const authTabs = document.querySelectorAll('.auth-tab');
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
+  const authForm = document.getElementById('auth-form');
+  const authEmailInput = document.getElementById('auth-email');
+  const authPasswordInput = document.getElementById('auth-password');
+  const authConfirmPasswordInput = document.getElementById('auth-confirm-password');
   const closeButton = document.querySelector('.auth-modal__close');
   const backdrop = document.querySelector('.auth-modal__backdrop');
-
-  const setActiveAuthTab = (tabName) => {
-    authTabs.forEach((tab) => {
-      const isActive = tab.dataset.tab === tabName;
-      tab.classList.toggle('auth-tab--active', isActive);
-    });
-
-    if (loginForm && signupForm) {
-      loginForm.hidden = tabName !== 'login';
-      signupForm.hidden = tabName !== 'signup';
-    }
-  };
+  const eyeButtons = document.querySelectorAll('.auth-eye-toggle');
+  const openEyeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const closedEyeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
 
   const checkAuthAndProceed = async (destinationUrl) => {
     try {
@@ -48,6 +40,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const setAuthMessage = (message, isError = true) => {
+    const errorElement = authForm?.querySelector('.auth-error');
+
+    if (!errorElement) {
+      return;
+    }
+
+    errorElement.hidden = false;
+    errorElement.textContent = message;
+
+    if (!isError) {
+      errorElement.style.color = '#b8f7c7';
+    } else {
+      errorElement.style.color = '#ff8a8a';
+    }
+  };
+
+  const clearAuthMessage = () => {
+    const errorElement = authForm?.querySelector('.auth-error');
+
+    if (errorElement) {
+      errorElement.hidden = true;
+      errorElement.textContent = '';
+      errorElement.style.color = '';
+    }
+  };
+
+  const finishAuth = () => {
+    if (authModal) {
+      authModal.hidden = true;
+    }
+
+    if (pendingTicketUrl) {
+      window.open(pendingTicketUrl, '_blank', 'noopener,noreferrer');
+      pendingTicketUrl = null;
+    }
+  };
+
   if (authModal) {
     authModal.addEventListener('click', (event) => {
       if (event.target === backdrop || event.target === authModal) {
@@ -62,99 +92,77 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  authTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      setActiveAuthTab(tab.dataset.tab);
+  eyeButtons.forEach((button) => {
+    const targetInput = document.getElementById(button.dataset.target);
+
+    if (!targetInput) {
+      return;
+    }
+
+    button.innerHTML = openEyeSvg;
+    button.setAttribute('aria-label', targetInput.type === 'password' ? 'Show password' : 'Hide password');
+
+    button.addEventListener('click', () => {
+      const isPassword = targetInput.type === 'password';
+      targetInput.type = isPassword ? 'text' : 'password';
+      button.innerHTML = targetInput.type === 'password' ? openEyeSvg : closedEyeSvg;
+      button.setAttribute('aria-label', targetInput.type === 'password' ? 'Show password' : 'Hide password');
     });
   });
 
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (event) => {
+  if (authForm) {
+    authForm.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      const errorElement = loginForm.querySelector('.auth-error');
-      const emailInput = loginForm.querySelector('input[type="email"]');
-      const passwordInput = loginForm.querySelector('input[type="password"]');
+      clearAuthMessage();
 
-      if (errorElement) {
-        errorElement.hidden = true;
-        errorElement.textContent = '';
+      const email = authEmailInput?.value.trim() || '';
+      const password = authPasswordInput?.value || '';
+      const confirmPassword = authConfirmPasswordInput?.value || '';
+
+      if (password !== confirmPassword) {
+        setAuthMessage('Passwords do not match');
+        return;
       }
 
       try {
-        const { error } = await supabaseClient.auth.signInWithPassword({
-          email: emailInput?.value.trim() || '',
-          password: passwordInput?.value || ''
-        });
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
         if (error) {
-          if (errorElement) {
-            errorElement.hidden = false;
-            errorElement.textContent = error.message;
+          const message = error.message || '';
+          const existingAccountError = /already/i.test(message) && /(registered|exist)/i.test(message);
+
+          if (existingAccountError) {
+            const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (loginError) {
+              setAuthMessage('An account with this email already exists. The password you entered is incorrect.');
+              return;
+            }
+
+            if (loginData?.session) {
+              finishAuth();
+              console.log('Logged in successfully');
+            }
+            return;
           }
+
+          setAuthMessage(error.message);
           return;
         }
 
-        if (authModal) {
-          authModal.hidden = true;
-        }
-
-        if (pendingTicketUrl) {
-          window.open(pendingTicketUrl, '_blank', 'noopener,noreferrer');
-          pendingTicketUrl = null;
-        }
-
-        console.log('Logged in successfully');
-      } catch (error) {
-        if (errorElement) {
-          errorElement.hidden = false;
-          errorElement.textContent = error.message;
-        }
-      }
-    });
-  }
-
-  if (signupForm) {
-    signupForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const errorElement = signupForm.querySelector('.auth-error');
-      const emailInput = signupForm.querySelector('input[type="email"]');
-      const passwordInput = signupForm.querySelector('input[type="password"]');
-
-      if (errorElement) {
-        errorElement.hidden = true;
-        errorElement.textContent = '';
-      }
-
-      try {
-        const { data, error } = await supabaseClient.auth.signUp({
-          email: emailInput?.value.trim() || '',
-          password: passwordInput?.value || ''
-        });
-
-        if (error) {
-          if (errorElement) {
-            errorElement.hidden = false;
-            errorElement.textContent = error.message;
-          }
+        if (data?.session) {
+          finishAuth();
+          console.log('Logged in successfully');
           return;
         }
 
-        if (errorElement) {
-          errorElement.hidden = false;
-          errorElement.textContent = 'Account created! Check your email to confirm, then log in.';
-        }
+        setAuthMessage('Account created! Check your email to confirm, then log in.', false);
       } catch (error) {
-        if (errorElement) {
-          errorElement.hidden = false;
-          errorElement.textContent = error.message;
-        }
+        setAuthMessage(error.message);
       }
     });
   }
-
-  setActiveAuthTab('login');
 
   console.log('Use document.getElementById("auth-modal").hidden = false to open the modal in the browser console.');
 

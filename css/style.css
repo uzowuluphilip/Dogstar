@@ -581,21 +581,14 @@ body {
   margin-bottom: 0.9rem;
 }
 
-.auth-tab {
-  padding: 0.7rem 0.8rem;
-  border: 0;
-  background: transparent;
-  color: #8f8f8f;
-  font-size: 0.82rem;
+.auth-modal__title {
+  margin: 0 0 0.4rem;
+  color: #e63946;
+  font-size: 1.4rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
+  text-align: center;
   text-transform: uppercase;
-  cursor: pointer;
-}
-
-.auth-tab--active {
-  color: #fff;
-  border-bottom: 2px solid #e63946;
 }
 
 .auth-modal__message {
@@ -614,6 +607,34 @@ body {
 
 .auth-form[hidden] {
   display: none !important;
+}
+
+.auth-password-field {
+  position: relative;
+}
+
+.auth-password-field input {
+  padding-right: 3rem;
+}
+
+.auth-eye-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #b8b8b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.auth-eye-toggle:hover,
+.auth-eye-toggle:focus-visible {
+  color: #fff;
 }
 
 .auth-form input {
