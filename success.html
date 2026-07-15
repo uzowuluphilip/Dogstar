@@ -3,51 +3,196 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment Successful</title>
+    <title>Dogstar | Payment Successful</title>
+    <link rel="stylesheet" href="css/style.css" />
     <style>
-      :root {
-        --bg: #050505;
-        --panel: #111111;
-        --text: #f5f5f5;
-        --accent: #b11b1b;
+      body {
+        background: #030303;
+        color: #f3f3f3;
+        min-height: 100vh;
       }
 
-      body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: var(--bg);
-        color: var(--text);
+      .success-page {
         min-height: 100vh;
         display: grid;
         place-items: center;
-        padding: 24px;
+        padding: 32px 20px;
       }
 
-      .card {
-        background: var(--panel);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
+      .success-card {
+        width: min(720px, 100%);
+        background: rgba(8, 8, 8, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
         padding: 32px;
-        max-width: 480px;
-        text-align: center;
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
       }
 
-      h1 {
-        margin-top: 0;
-        color: var(--accent);
+      .success-brand {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #d91f2d;
+        font-size: 1.2rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        font-weight: 700;
       }
 
-      p {
+      .success-check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #d91f2d;
+        color: #fff;
+        font-size: 1.8rem;
+        margin-bottom: 16px;
+      }
+
+      .success-card h1 {
+        margin: 0 0 10px;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        color: #fff;
+      }
+
+      .success-card p {
+        margin: 0 0 12px;
         line-height: 1.6;
-        margin-bottom: 0;
+        color: #d9d9d9;
+      }
+
+      .success-meta {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .success-list {
+        list-style: none;
+        padding: 0;
+        margin: 16px 0 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .success-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .success-total {
+        margin-top: 14px;
+        font-weight: 700;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .success-actions {
+        margin-top: 24px;
+      }
+
+      .success-actions a {
+        display: inline-block;
+        padding: 12px 18px;
+        background: #d91f2d;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+
+      .success-actions a:hover {
+        background: #b31724;
+      }
+
+      .success-loading,
+      .success-error {
+        color: #d9d9d9;
+        margin-top: 12px;
+      }
+
+      .success-error {
+        color: #ff8a8a;
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>Payment successful!</h1>
-      <p>Thank you for your order. Your tickets will be confirmed shortly.</p>
+    <main class="success-page">
+      <section class="success-card" aria-live="polite">
+        <div class="success-brand">DOGSTAR</div>
+        <div class="success-check">✓</div>
+        <h1>Payment Successful!</h1>
+        <p>Your order has been received and is being processed.</p>
+        <div id="success-content">
+          <p class="success-loading">Loading order details...</p>
+        </div>
+      </section>
     </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get('session_id');
+      const container = document.getElementById('success-content');
+
+      const renderError = (message) => {
+        if (!container) return;
+        container.innerHTML = `<p class="success-error">${message}</p>`;
+      };
+
+      const formatCurrency = (value) => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(value || 0);
+      };
+
+      const buildOrderMarkup = (data) => {
+        const items = Array.isArray(data.lineItems) ? data.lineItems : [];
+        const emailLine = data.customerEmail ? `<p><strong>Email:</strong> ${data.customerEmail}</p>` : '<p><strong>Email:</strong> Not available</p>';
+        const itemsMarkup = items.length
+          ? `<ul class="success-list">${items.map((item) => `<li><span>${item.name} × ${item.quantity}</span><span>${formatCurrency(item.amount)}</span></li>`).join('')}</ul>`
+          : '<p>No item details were returned.</p>';
+
+        return `
+          ${emailLine}
+          ${itemsMarkup}
+          <div class="success-total">
+            <span>Total Paid</span>
+            <span>${formatCurrency(data.amountTotal)}</span>
+          </div>
+          <div class="success-actions">
+            <a href="/">Back to Homepage</a>
+          </div>
+          <p style="margin-top: 16px;">A confirmation email will be sent shortly.</p>
+        `;
+      };
+
+      if (!sessionId) {
+        renderError('Order details unavailable. Please return to the homepage and try again.');
+        return;
+      }
+
+      (async () => {
+        try {
+          const response = await fetch(`/api/get-checkout-session?session_id=${sessionId}`);
+          const data = await response.json();
+
+          if (!response.ok || data?.error) {
+            throw new Error(data?.error || 'Unable to load order details.');
+          }
+
+          if (!container) return;
+          container.innerHTML = buildOrderMarkup(data);
+        } catch (error) {
+          renderError(error.message || 'We could not load your order details right now.');
+        }
+      })();
+    </script>
   </body>
 </html>
