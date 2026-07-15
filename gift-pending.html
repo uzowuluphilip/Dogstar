@@ -129,7 +129,7 @@
     <script>
       const SUPABASE_URL = "https://kcbneewtmthghebkeghr.supabase.co";
       const SUPABASE_KEY = "sb_publishable_8L_MKngPudQh6cdvf1BzTg_vOFt7XeK";
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
       const container = document.getElementById('pending-content');
 
@@ -177,7 +177,7 @@
         }
 
         try {
-          const { data, error } = await supabase
+          const { data, error } = await supabaseClient
             .from('gift_card_orders')
             .select('id,event_name,total_amount,gift_card_brand,gift_card_code,status')
             .eq('id', orderId)
