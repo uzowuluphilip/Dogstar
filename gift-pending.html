@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dogstar | Gift Card Submission Pending</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      body {
+        background: #050505;
+        color: #f4f4f4;
+        min-height: 100vh;
+      }
+
+      .pending-page {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 20px;
+      }
+
+      .pending-card {
+        width: min(760px, 100%);
+        background: rgba(12, 12, 12, 0.95);
+        border: 1px solid rgba(217, 31, 45, 0.18);
+        border-radius: 18px;
+        padding: 36px;
+        box-shadow: 0 22px 65px rgba(0, 0, 0, 0.45);
+      }
+
+      .pending-brand {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #d91f2d;
+        font-size: 1.1rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .pending-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        font-size: 1rem;
+        color: #f4f4f4;
+        font-weight: 700;
+      }
+
+      .pending-status::before {
+        content: "●";
+        color: #ff8a8a;
+      }
+
+      .pending-card h1 {
+        margin: 0 0 14px;
+        font-size: clamp(2rem, 3vw, 2.6rem);
+        color: #fff;
+      }
+
+      .pending-card p {
+        margin: 0 0 16px;
+        line-height: 1.7;
+        color: #d9d9d9;
+      }
+
+      .pending-list {
+        list-style: none;
+        margin: 20px 0 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .pending-list li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+      }
+
+      .pending-actions {
+        margin-top: 24px;
+      }
+
+      .pending-actions a {
+        display: inline-block;
+        padding: 12px 22px;
+        background: #d91f2d;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+
+      .pending-actions a:hover {
+        background: #b31724;
+      }
+
+      .pending-error,
+      .pending-loading {
+        color: #d9d9d9;
+        margin-top: 14px;
+      }
+
+      .pending-error {
+        color: #ff8a8a;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="pending-page">
+      <section class="pending-card" aria-live="polite">
+        <div class="pending-brand">DOGSTAR</div>
+        <div class="pending-status">Your gift card submission is pending review</div>
+        <h1>Thank you. We've received your gift card details.</h1>
+        <p>Our team is verifying your gift card and ticket selection now. You will be notified once the submission is approved.</p>
+        <div id="pending-content">
+          <p class="pending-loading">Loading submission details...</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+      const SUPABASE_URL = "https://kcbneewtmthghebkeghr.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_8L_MKngPudQh6cdvf1BzTg_vOFt7XeK";
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      const container = document.getElementById('pending-content');
+
+      const renderError = (message) => {
+        if (!container) return;
+        container.innerHTML = `<p class="pending-error">${message}</p>`;
+      };
+
+      const maskCode = (code) => {
+        if (!code) return 'Not available';
+        const visibleStart = code.slice(0, 3);
+        const visibleEnd = code.slice(-3);
+        return `${visibleStart}•••••••${visibleEnd}`;
+      };
+
+      const renderOrder = (order) => {
+        if (!container) return;
+
+        const list = [
+          { label: 'Event', value: order.event_name || 'Not available' },
+          { label: 'Gift Card Brand', value: order.gift_card_brand || 'Not available' },
+          { label: 'Gift Card Code', value: maskCode(order.gift_card_code) },
+          { label: 'Total Requested', value: order.total_amount ? `$${order.total_amount.toFixed(2)}` : 'Not available' },
+          { label: 'Status', value: order.status || 'Pending' },
+        ];
+
+        container.innerHTML = `
+          <ul class="pending-list">
+            ${list.map(item => `<li><span>${item.label}</span><strong>${item.value}</strong></li>`).join('')}
+          </ul>
+          <div class="pending-actions">
+            <a href="/">Return Home</a>
+          </div>
+          <p style="margin-top: 20px; color: #cfcfcf;">If you need help, please contact support through your account or the homepage.</p>
+        `;
+      };
+
+      const loadGiftCardOrder = async () => {
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get('order_id');
+
+        if (!orderId) {
+          renderError('Unable to load submission details. Please return to the homepage and try again.');
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase
+            .from('gift_card_orders')
+            .select('id,event_name,total_amount,gift_card_brand,gift_card_code,status')
+            .eq('id', orderId)
+            .single();
+
+          if (error || !data) {
+            throw new Error(error?.message || 'Gift card submission not found.');
+          }
+
+          renderOrder(data);
+        } catch (error) {
+          console.error(error);
+          renderError(error.message || 'Could not load submission details at this time.');
+        }
+      };
+
+      loadGiftCardOrder();
+    </script>
+  </body>
+</html>
