@@ -189,12 +189,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
       <select class="entry-brand" required>
         <option value="">SELECT GIFT CARD BRAND</option>
-        <option value="Amazon">Amazon</option>
-        <option value="Visa">Visa</option>
-        <option value="Mastercard">Mastercard</option>
-        <option value="Apple">Apple / iTunes</option>
-        <option value="Google Play">Google Play</option>
-        <option value="Steam">Steam</option>
+        <option value="Apple">Apple gift card</option>
+        <option value="iTunes">iTunes gift card</option>
+        <option value="Razer Gold">Razer Gold gift card</option>
+        <option value="Steam">Steam gift card</option>
+        <option value="Walmart">Walmart gift card</option>
       </select>
       <input type="text" class="entry-code" placeholder="GIFT CARD CODE" required>
       <input type="number" class="entry-amount" placeholder="AMOUNT ON THIS CARD ($)" min="0.01" step="0.01" required>
