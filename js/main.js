@@ -540,6 +540,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         resetTicketModal();
         if (ticketModal) ticketModal.hidden = true;
 
+        fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            type: 'gift_pending',
+            to: user.email,
+            data: {
+              eventName: eventNameString,
+              totalAmount: totalAmount,
+              orderId: insertedOrder.id
+            }
+          })
+        }).catch(err => console.error('Email send failed:', err));
+
         window.location.href = `/gift-pending.html?order_id=${insertedOrder.id}`;
       } catch (error) {
         giftCardError.hidden = false;
