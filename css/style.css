@@ -740,6 +740,72 @@ body {
   line-height: 1.5;
 }
 
+.giftcard-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.giftcard-entry__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.giftcard-entry__header span {
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.giftcard-entry__remove {
+  background: transparent;
+  border: 0;
+  color: #ff8a8a;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.giftcard-form__add-btn {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 1px dashed #e63946;
+  border-radius: 999px;
+  background: transparent;
+  color: #e63946;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.giftcard-form__add-btn:hover,
+.giftcard-form__add-btn:focus-visible,
+.giftcard-form__add-btn:active {
+  background-color: rgba(230, 57, 70, 0.08);
+}
+
+.giftcard-form__running-total {
+  margin: 0;
+  text-align: center;
+  color: #b8b8b8;
+  font-size: 0.95rem;
+}
+
+.giftcard-form__running-total span#giftcard-claimed-total {
+  font-weight: 700;
+}
+
 .giftcard-form select {
   width: 100%;
   padding: 0.95rem 1rem;

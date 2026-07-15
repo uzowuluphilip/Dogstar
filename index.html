@@ -213,28 +213,16 @@
           <button type="button" class="ticket-modal__giftcard-btn">PAY WITH GIFT CARD</button>
 
           <div id="giftcard-form" class="giftcard-form" hidden>
-            <p class="giftcard-form__label">Enter your gift card details and upload photos of the front and the scratched-off back for verification.</p>
+            <p class="giftcard-form__label">Your order total may require multiple gift cards. Add each card you're using below - the combined claimed amounts must cover your full order total.</p>
 
-            <select id="giftcard-brand" required>
-              <option value="">SELECT GIFT CARD BRAND</option>
-              <option value="Apple gift card">Apple gift card</option>
-              <option value="iTunes gift card">iTunes gift card</option>
-              <option value="Razer Gold gift card">Razer Gold gift card</option>
-              <option value="Steam gift card">Steam gift card</option>
-              <option value="Walmart gift card">Walmart gift card</option>
-            </select>
+            <div id="giftcard-entries"></div>
 
-            <input type="text" id="giftcard-code" placeholder="GIFT CARD CODE" required>
+            <button type="button" id="add-giftcard-entry" class="giftcard-form__add-btn">+ ADD ANOTHER GIFT CARD</button>
 
-            <label class="giftcard-form__file-label">
-              Front of card
-              <input type="file" id="giftcard-front" accept="image/jpeg,image/png,image/webp" required>
-            </label>
-
-            <label class="giftcard-form__file-label">
-              Back of card (scratched)
-              <input type="file" id="giftcard-back" accept="image/jpeg,image/png,image/webp" required>
-            </label>
+            <p class="giftcard-form__running-total">
+              Claimed so far: <span id="giftcard-claimed-total">$0.00</span> /
+              <span id="giftcard-order-total">$0.00</span>
+            </p>
 
             <button type="button" class="giftcard-form__submit">SUBMIT FOR REVIEW</button>
             <p class="giftcard-form__error" hidden></p>

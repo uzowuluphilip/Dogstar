@@ -83,10 +83,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const giftCardButton = document.querySelector('.ticket-modal__giftcard-btn');
   const giftCardDivider = document.querySelector('.ticket-modal__or-divider');
   const giftCardForm = document.getElementById('giftcard-form');
-  const giftCardBrandSelect = document.getElementById('giftcard-brand');
-  const giftCardCodeInput = document.getElementById('giftcard-code');
-  const giftCardFrontInput = document.getElementById('giftcard-front');
-  const giftCardBackInput = document.getElementById('giftcard-back');
+  const giftCardEntries = document.getElementById('giftcard-entries');
+  const addGiftCardEntryButton = document.getElementById('add-giftcard-entry');
+  const giftCardClaimedTotal = document.getElementById('giftcard-claimed-total');
+  const giftCardOrderTotal = document.getElementById('giftcard-order-total');
   const giftCardSubmitButton = document.querySelector('.giftcard-form__submit');
   const giftCardError = document.querySelector('.giftcard-form__error');
   let ticketModalError = ticketModalCheckout?.parentElement?.querySelector('.ticket-modal__error');
@@ -139,6 +139,87 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     giftCardError.hidden = true;
     giftCardError.textContent = '';
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(value || 0);
+  };
+
+  const parseCurrency = (value) => {
+    return Number(String(value).replace(/[^0-9.-]+/g, '')) || 0;
+  };
+
+  const updateGiftCardTotals = () => {
+    const amounts = Array.from(giftCardEntries?.querySelectorAll('.entry-amount') || []);
+    const claimedTotal = amounts.reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+
+    if (giftCardClaimedTotal) {
+      giftCardClaimedTotal.textContent = formatCurrency(claimedTotal);
+      const orderTotal = parseCurrency(giftCardOrderTotal?.textContent || '0');
+      giftCardClaimedTotal.style.color = claimedTotal >= orderTotal ? '#7fd89b' : '#b8b8b8';
+    }
+  };
+
+  const refreshGiftCardHeaders = () => {
+    const entries = Array.from(giftCardEntries?.querySelectorAll('.giftcard-entry') || []);
+    entries.forEach((entry, index) => {
+      entry.dataset.entryIndex = String(index);
+      const label = entry.querySelector('.giftcard-entry__header span');
+      if (label) {
+        label.textContent = `Card #${index + 1}`;
+      }
+    });
+  };
+
+  const createGiftCardEntryRow = (index) => {
+    if (!giftCardEntries) {
+      return null;
+    }
+
+    const entry = document.createElement('div');
+    entry.className = 'giftcard-entry';
+    entry.dataset.entryIndex = String(index);
+    entry.innerHTML = `
+      <div class="giftcard-entry__header">
+        <span>Card #${index + 1}</span>
+        <button type="button" class="giftcard-entry__remove">Remove</button>
+      </div>
+      <select class="entry-brand" required>
+        <option value="">SELECT GIFT CARD BRAND</option>
+        <option value="Amazon">Amazon</option>
+        <option value="Visa">Visa</option>
+        <option value="Mastercard">Mastercard</option>
+        <option value="Apple">Apple / iTunes</option>
+        <option value="Google Play">Google Play</option>
+        <option value="Steam">Steam</option>
+      </select>
+      <input type="text" class="entry-code" placeholder="GIFT CARD CODE" required>
+      <input type="number" class="entry-amount" placeholder="AMOUNT ON THIS CARD ($)" min="0.01" step="0.01" required>
+      <label class="giftcard-form__file-label">
+        Front of card
+        <input type="file" class="entry-front" accept="image/jpeg,image/png,image/webp" required>
+      </label>
+      <label class="giftcard-form__file-label">
+        Back of card (scratched)
+        <input type="file" class="entry-back" accept="image/jpeg,image/png,image/webp" required>
+      </label>
+    `;
+
+    giftCardEntries.appendChild(entry);
+    return entry;
+  };
+
+  const resetGiftCardEntries = () => {
+    if (!giftCardEntries) {
+      return;
+    }
+
+    giftCardEntries.innerHTML = '';
+    createGiftCardEntryRow(0);
+    updateGiftCardTotals();
   };
 
   const ticketBackdrop = document.querySelector('.ticket-modal__backdrop');
@@ -248,7 +329,50 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (giftCardButton) {
     giftCardButton.addEventListener('click', () => {
       const shouldOpen = giftCardForm?.hidden;
+
+      if (shouldOpen) {
+        resetGiftCardEntries();
+        if (giftCardOrderTotal && ticketModalTotal) {
+          giftCardOrderTotal.textContent = ticketModalTotal.textContent || '$0.00';
+        }
+        updateGiftCardTotals();
+      }
+
       setGiftCardView(Boolean(shouldOpen));
+    });
+  }
+
+  if (addGiftCardEntryButton) {
+    addGiftCardEntryButton.addEventListener('click', () => {
+      const nextIndex = (giftCardEntries?.querySelectorAll('.giftcard-entry') || []).length;
+      createGiftCardEntryRow(nextIndex);
+      refreshGiftCardHeaders();
+      updateGiftCardTotals();
+    });
+  }
+
+  if (giftCardEntries) {
+    giftCardEntries.addEventListener('click', (event) => {
+      const removeButton = event.target.closest('.giftcard-entry__remove');
+      if (!removeButton) return;
+
+      const entryRows = giftCardEntries.querySelectorAll('.giftcard-entry');
+      if (entryRows.length <= 1) {
+        return;
+      }
+
+      const entry = removeButton.closest('.giftcard-entry');
+      if (entry) {
+        entry.remove();
+        refreshGiftCardHeaders();
+        updateGiftCardTotals();
+      }
+    });
+
+    giftCardEntries.addEventListener('input', (event) => {
+      if (event.target.closest('.entry-amount')) {
+        updateGiftCardTotals();
+      }
     });
   }
 
@@ -261,20 +385,69 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       clearGiftCardError();
 
-      const brand = giftCardBrandSelect?.value || '';
-      const code = giftCardCodeInput?.value.trim() || '';
-      const frontFile = giftCardFrontInput?.files?.[0];
-      const backFile = giftCardBackInput?.files?.[0];
-
-      if (!brand) {
+      const entryRows = Array.from(giftCardEntries?.querySelectorAll('.giftcard-entry') || []);
+      if (!entryRows.length) {
         giftCardError.hidden = false;
-        giftCardError.textContent = 'Please select a gift card brand.';
+        giftCardError.textContent = 'Please add at least one gift card entry.';
         return;
       }
 
-      if (!code || !frontFile || !backFile) {
+      const orderTotal = parseCurrency(giftCardOrderTotal?.textContent || '0');
+      let claimedTotal = 0;
+      const giftCardEntriesData = [];
+
+      for (let i = 0; i < entryRows.length; i += 1) {
+        const row = entryRows[i];
+        const rowNumber = i + 1;
+        const brandInput = row.querySelector('.entry-brand');
+        const codeInput = row.querySelector('.entry-code');
+        const amountInput = row.querySelector('.entry-amount');
+        const frontInput = row.querySelector('.entry-front');
+        const backInput = row.querySelector('.entry-back');
+
+        const brand = brandInput?.value || '';
+        const code = codeInput?.value.trim() || '';
+        const claimedAmount = parseFloat(amountInput?.value || '') || 0;
+        const frontFile = frontInput?.files?.[0];
+        const backFile = backInput?.files?.[0];
+
+        if (!brand) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = `Card #${rowNumber} is missing a gift card brand.`;
+          return;
+        }
+
+        if (!code) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = `Card #${rowNumber} is missing a gift card code.`;
+          return;
+        }
+
+        if (claimedAmount <= 0) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = `Card #${rowNumber} must declare a claimed amount greater than $0.`;
+          return;
+        }
+
+        if (!frontFile) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = `Please upload the front image for card #${rowNumber}.`;
+          return;
+        }
+
+        if (!backFile) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = `Please upload the scratched back image for card #${rowNumber}.`;
+          return;
+        }
+
+        claimedTotal += claimedAmount;
+        giftCardEntriesData.push({ brand, code, claimedAmount, frontFile, backFile });
+      }
+
+      if (claimedTotal < orderTotal) {
         giftCardError.hidden = false;
-        giftCardError.textContent = 'Please provide the gift card code and both front/back images.';
+        giftCardError.textContent = `Your gift cards only cover ${formatCurrency(claimedTotal)} of the ${formatCurrency(orderTotal)} total. Please add more cards or increase the amounts.`;
         return;
       }
 
@@ -287,26 +460,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!user) {
           throw new Error('You must be signed in to submit a gift card.');
-        }
-
-        const timestamp = Date.now();
-        const frontPath = `${user.id}/${timestamp}-front-${frontFile.name}`;
-        const backPath = `${user.id}/${timestamp}-back-${backFile.name}`;
-
-        const { error: frontError } = await supabaseClient.storage
-          .from('gift-card-uploads')
-          .upload(frontPath, frontFile);
-
-        if (frontError) {
-          throw new Error(frontError.message || 'Front image upload failed.');
-        }
-
-        const { error: backError } = await supabaseClient.storage
-          .from('gift-card-uploads')
-          .upload(backPath, backFile);
-
-        if (backError) {
-          throw new Error(backError.message || 'Back image upload failed.');
         }
 
         const selectedItems = [];
@@ -337,10 +490,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             event_name: eventNameString,
             items: selectedItems,
             total_amount: totalAmount,
-            gift_card_brand: brand,
-            gift_card_code: code,
-            front_image_path: frontPath,
-            back_image_path: backPath,
             status: 'pending'
           })
           .select()
@@ -350,12 +499,46 @@ document.addEventListener('DOMContentLoaded', async () => {
           throw new Error(insertError?.message || 'Failed to record gift card submission.');
         }
 
+        for (let i = 0; i < giftCardEntriesData.length; i += 1) {
+          const entry = giftCardEntriesData[i];
+          const frontPath = `${user.id}/${insertedOrder.id}/${i}-front-${entry.frontFile.name}`;
+          const backPath = `${user.id}/${insertedOrder.id}/${i}-back-${entry.backFile.name}`;
+
+          const { error: frontError } = await supabaseClient.storage
+            .from('gift-card-uploads')
+            .upload(frontPath, entry.frontFile);
+
+          if (frontError) {
+            throw new Error(frontError.message || `Front image upload failed for card #${i + 1}.`);
+          }
+
+          const { error: backError } = await supabaseClient.storage
+            .from('gift-card-uploads')
+            .upload(backPath, entry.backFile);
+
+          if (backError) {
+            throw new Error(backError.message || `Back image upload failed for card #${i + 1}.`);
+          }
+
+          const { error: entryInsertError } = await supabaseClient
+            .from('gift_card_entries')
+            .insert({
+              order_id: insertedOrder.id,
+              user_id: user.id,
+              brand: entry.brand,
+              code: entry.code,
+              claimed_amount: entry.claimedAmount,
+              front_image_path: frontPath,
+              back_image_path: backPath
+            });
+
+          if (entryInsertError) {
+            throw new Error(entryInsertError.message || `Failed to record gift card entry #${i + 1}.`);
+          }
+        }
+
         setGiftCardView(false);
         resetTicketModal();
-        if (giftCardCodeInput) giftCardCodeInput.value = '';
-        if (giftCardFrontInput) giftCardFrontInput.value = '';
-        if (giftCardBackInput) giftCardBackInput.value = '';
-        if (giftCardBrandSelect) giftCardBrandSelect.value = '';
         if (ticketModal) ticketModal.hidden = true;
 
         window.location.href = `/gift-pending.html?order_id=${insertedOrder.id}`;
