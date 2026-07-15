@@ -1,7 +1,7 @@
 const SUPABASE_URL = "https://kcbneewtmthghebkeghr.supabase.co";
 const SUPABASE_KEY = "sb_publishable_8L_MKngPudQh6cdvf1BzTg_vOFt7XeK";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let pendingTicketUrl = null;
+let pendingTourDateEntry = null;
 
 supabaseClient.auth.getSession().then((result) => {
   console.log('Supabase auth session check:', result);
@@ -9,8 +9,109 @@ supabaseClient.auth.getSession().then((result) => {
   console.error('Supabase auth session check failed:', error);
 });
 
+let activeTourDateEntry = null;
+
+const openTicketModal = (tourDateEntry) => {
+  const ticketModal = document.getElementById('ticket-modal');
+  const ticketModalDate = document.querySelector('.ticket-modal__date');
+  const ticketModalVenue = document.querySelector('.ticket-modal__venue');
+  const ticketModalLocation = document.querySelector('.ticket-modal__location');
+  const ticketModalPackages = document.querySelector('.ticket-modal__packages');
+  const ticketModalTotal = document.querySelector('.ticket-modal__total-amount');
+  const ticketModalCheckout = document.querySelector('.ticket-modal__checkout-btn');
+
+  if (!tourDateEntry) return;
+
+  activeTourDateEntry = tourDateEntry;
+
+  if (ticketModalDate) ticketModalDate.textContent = tourDateEntry.displayDate || '';
+  if (ticketModalVenue) ticketModalVenue.textContent = tourDateEntry.venue || '';
+  if (ticketModalLocation) ticketModalLocation.textContent = tourDateEntry.location || '';
+
+  if (ticketModalPackages) {
+    ticketModalPackages.innerHTML = '';
+
+    (tourDateEntry.packages || []).forEach((pkg) => {
+      const packageRow = document.createElement('div');
+      packageRow.className = 'package-row';
+      packageRow.dataset.packageId = pkg.id;
+      packageRow.dataset.name = pkg.name;
+      packageRow.dataset.price = pkg.price;
+
+      packageRow.innerHTML = `
+        <div class="package-row__info">
+          <h3 class="package-row__name">${pkg.name}</h3>
+          <p class="package-row__description">${pkg.description}</p>
+          <p class="package-row__price">$${Number(pkg.price).toFixed(2)}</p>
+        </div>
+        <div class="package-row__quantity">
+          <button type="button" class="qty-btn qty-btn--minus">-</button>
+          <span class="qty-value">0</span>
+          <button type="button" class="qty-btn qty-btn--plus">+</button>
+        </div>
+      `;
+
+      ticketModalPackages.appendChild(packageRow);
+    });
+  }
+
+  if (ticketModalTotal) {
+    ticketModalTotal.textContent = '$0.00';
+  }
+
+  if (ticketModalCheckout) {
+    ticketModalCheckout.disabled = true;
+  }
+
+  if (ticketModal) {
+    ticketModal.hidden = false;
+  }
+};
+
+window.openTicketModal = openTicketModal;
+
 document.addEventListener('DOMContentLoaded', async () => {
   const authModal = document.getElementById('auth-modal');
+  const ticketModal = document.getElementById('ticket-modal');
+  const ticketModalDate = document.querySelector('.ticket-modal__date');
+  const ticketModalVenue = document.querySelector('.ticket-modal__venue');
+  const ticketModalLocation = document.querySelector('.ticket-modal__location');
+  const ticketModalPackages = document.querySelector('.ticket-modal__packages');
+  const ticketModalTotal = document.querySelector('.ticket-modal__total-amount');
+  const ticketModalCheckout = document.querySelector('.ticket-modal__checkout-btn');
+  const ticketModalClose = document.querySelector('.ticket-modal__close');
+  let ticketModalError = ticketModalCheckout?.parentElement?.querySelector('.ticket-modal__error');
+
+  if (!ticketModalError && ticketModalCheckout?.parentElement) {
+    ticketModalError = document.createElement('div');
+    ticketModalError.className = 'ticket-modal__error';
+    ticketModalError.setAttribute('role', 'alert');
+    ticketModalError.hidden = true;
+    ticketModalError.style.color = '#ff8a8a';
+    ticketModalError.style.fontSize = '0.9rem';
+    ticketModalError.style.marginTop = '0.75rem';
+    ticketModalError.style.textAlign = 'center';
+    ticketModalCheckout.parentElement.appendChild(ticketModalError);
+  }
+
+  const showTicketError = (message) => {
+    if (!ticketModalError) {
+      return;
+    }
+
+    ticketModalError.hidden = false;
+    ticketModalError.textContent = message;
+  };
+
+  const clearTicketError = () => {
+    if (!ticketModalError) {
+      return;
+    }
+
+    ticketModalError.hidden = true;
+    ticketModalError.textContent = '';
+  };
+  const ticketBackdrop = document.querySelector('.ticket-modal__backdrop');
   const authForm = document.getElementById('auth-form');
   const authEmailInput = document.getElementById('auth-email');
   const authPasswordInput = document.getElementById('auth-password');
@@ -21,19 +122,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openEyeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
   const closedEyeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
 
-  const checkAuthAndProceed = async (destinationUrl) => {
+  const checkAuthAndProceed = async (tourDateEntry) => {
     try {
       const { data: { session } } = await supabaseClient.auth.getSession();
 
       if (session) {
-        window.open(destinationUrl, '_blank', 'noopener,noreferrer');
+        openTicketModal(tourDateEntry);
         return;
       }
     } catch (error) {
       console.error('Unable to check auth session:', error);
     }
 
-    pendingTicketUrl = destinationUrl;
+    pendingTourDateEntry = tourDateEntry;
 
     if (authModal) {
       authModal.hidden = false;
@@ -72,9 +173,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       authModal.hidden = true;
     }
 
-    if (pendingTicketUrl) {
-      window.open(pendingTicketUrl, '_blank', 'noopener,noreferrer');
-      pendingTicketUrl = null;
+    if (pendingTourDateEntry) {
+      openTicketModal(pendingTourDateEntry);
+      pendingTourDateEntry = null;
     }
   };
 
@@ -89,6 +190,124 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (closeButton && authModal) {
     closeButton.addEventListener('click', () => {
       authModal.hidden = true;
+    });
+  }
+
+  const resetTicketModal = () => {
+    if (ticketModalPackages) {
+      const rows = ticketModalPackages.querySelectorAll('.package-row');
+      rows.forEach((row) => {
+        const qtyValue = row.querySelector('.qty-value');
+        if (qtyValue) {
+          qtyValue.textContent = '0';
+        }
+      });
+    }
+
+    if (ticketModalTotal) {
+      ticketModalTotal.textContent = '$0.00';
+    }
+
+    if (ticketModalCheckout) {
+      ticketModalCheckout.disabled = true;
+    }
+  };
+
+  if (ticketModalClose && ticketModal) {
+    ticketModalClose.addEventListener('click', () => {
+      ticketModal.hidden = true;
+      resetTicketModal();
+    });
+  }
+
+  if (ticketModal && ticketBackdrop) {
+    ticketModal.addEventListener('click', (event) => {
+      if (event.target === ticketBackdrop || event.target === ticketModal) {
+        ticketModal.hidden = true;
+        resetTicketModal();
+      }
+    });
+  }
+
+  if (ticketModalPackages) {
+    ticketModalPackages.addEventListener('click', (event) => {
+      const button = event.target.closest('.qty-btn');
+      if (!button) return;
+
+      const row = button.closest('.package-row');
+      if (!row) return;
+
+      const qtyValue = row.querySelector('.qty-value');
+      if (!qtyValue) return;
+
+      const currentValue = Number(qtyValue.textContent || '0');
+      const nextValue = button.classList.contains('qty-btn--plus')
+        ? currentValue + 1
+        : Math.max(0, currentValue - 1);
+
+      qtyValue.textContent = String(nextValue);
+
+      let total = 0;
+      ticketModalPackages.querySelectorAll('.package-row').forEach((packageRow) => {
+        const packageQty = Number(packageRow.querySelector('.qty-value')?.textContent || '0');
+        const price = Number(packageRow.dataset.price || '0');
+        total += price * packageQty;
+      });
+
+      if (ticketModalTotal) {
+        ticketModalTotal.textContent = `$${total.toFixed(2)}`;
+      }
+
+      if (ticketModalCheckout) {
+        ticketModalCheckout.disabled = total <= 0;
+      }
+    });
+  }
+
+  if (ticketModalCheckout) {
+    ticketModalCheckout.addEventListener('click', async () => {
+      const selectedItems = [];
+      ticketModalPackages?.querySelectorAll('.package-row').forEach((packageRow) => {
+        const quantity = Number(packageRow.querySelector('.qty-value')?.textContent || '0');
+        if (quantity > 0) {
+          selectedItems.push({
+            name: packageRow.dataset.name || packageRow.querySelector('.package-row__name')?.textContent?.trim() || 'Ticket',
+            price: Number(packageRow.dataset.price || '0'),
+            quantity
+          });
+        }
+      });
+
+      if (!selectedItems.length) {
+        showTicketError('Please select at least one ticket.');
+        return;
+      }
+
+      clearTicketError();
+      ticketModalCheckout.disabled = true;
+      ticketModalCheckout.textContent = 'PROCESSING...';
+
+      try {
+        const eventNameString = `Dogstar Live - ${activeTourDateEntry?.venue || 'Upcoming Show'} (${activeTourDateEntry?.displayDate || 'TBD'})`;
+        const response = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: selectedItems, eventName: eventNameString })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (data?.url) {
+          window.location.href = data.url;
+          return;
+        }
+
+        throw new Error(data?.error || 'Unable to start checkout.');
+      } catch (error) {
+        showTicketError(error.message || 'Unable to start checkout.');
+        ticketModalCheckout.disabled = false;
+        ticketModalCheckout.textContent = 'CHECKOUT';
+      }
     });
   }
 
@@ -174,6 +393,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const tourList = document.querySelector('.tour-list');
+  let tourDatesData = [];
   if (!tourList) return;
 
   try {
@@ -183,6 +403,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const tours = await response.json();
+    tourDatesData = tours;
+    window.tourDatesData = tours;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -219,7 +441,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         vipLink.textContent = 'VIP';
         vipLink.addEventListener('click', (event) => {
           event.preventDefault();
-          checkAuthAndProceed(tour.vipUrl);
+          checkAuthAndProceed(tour);
         });
         actions.appendChild(vipLink);
       }
@@ -230,7 +452,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       ticketsLink.textContent = 'TICKETS';
       ticketsLink.addEventListener('click', (event) => {
         event.preventDefault();
-        checkAuthAndProceed(tour.ticketsUrl || '#');
+        checkAuthAndProceed(tour);
       });
       actions.appendChild(ticketsLink);
 
@@ -243,4 +465,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error('Unable to load tour dates:', error);
   }
+
+  console.log('Test the ticket modal with: openTicketModal(tourDatesData[0])');
 });

@@ -5,7 +5,23 @@
     "venue": "PORDENONE BLUES & CO. FESTIVAL",
     "location": "PORDENONE, ITALY",
     "ticketsUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator",
-    "vipUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator"
+    "vipUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator",
+    "packages": [
+      {
+        "id": "ga",
+        "name": "General Admission",
+        "price": 25.00,
+        "currency": "USD",
+        "description": "Standard entry to the show."
+      },
+      {
+        "id": "vip",
+        "name": "VIP Package",
+        "price": 75.00,
+        "currency": "USD",
+        "description": "Early entry, meet & greet, and exclusive merch bundle."
+      }
+    ]
   },
   {
     "date": "2026-08-02",
@@ -13,7 +29,23 @@
     "venue": "PLACEHOLDER VENUE NAME",
     "location": "PLACEHOLDER CITY, COUNTRY",
     "ticketsUrl": "#",
-    "vipUrl": null
+    "vipUrl": null,
+    "packages": [
+      {
+        "id": "ga",
+        "name": "General Admission",
+        "price": 30.00,
+        "currency": "USD",
+        "description": "Standard entry to the show."
+      },
+      {
+        "id": "vip",
+        "name": "VIP Package",
+        "price": 85.00,
+        "currency": "USD",
+        "description": "Priority entry and exclusive merch access."
+      }
+    ]
   },
   {
     "date": "2026-09-19",
@@ -21,6 +53,22 @@
     "venue": "PLACEHOLDER VENUE NAME",
     "location": "PLACEHOLDER CITY, COUNTRY",
     "ticketsUrl": "#",
-    "vipUrl": "#"
+    "vipUrl": "#",
+    "packages": [
+      {
+        "id": "ga",
+        "name": "General Admission",
+        "price": 28.00,
+        "currency": "USD",
+        "description": "Standard entry to the show."
+      },
+      {
+        "id": "vip",
+        "name": "VIP Package",
+        "price": 80.00,
+        "currency": "USD",
+        "description": "Premium seating and exclusive event access."
+      }
+    ]
   }
 ]

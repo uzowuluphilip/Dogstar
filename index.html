@@ -187,5 +187,28 @@
         </form>
       </div>
     </div>
+
+    <div id="ticket-modal" class="ticket-modal" hidden>
+      <div class="ticket-modal__backdrop"></div>
+      <div class="ticket-modal__box">
+        <button class="ticket-modal__close" aria-label="Close">&times;</button>
+
+        <div class="ticket-modal__event-info">
+          <p class="ticket-modal__date"></p>
+          <h2 class="ticket-modal__venue"></h2>
+          <p class="ticket-modal__location"></p>
+        </div>
+
+        <div class="ticket-modal__packages"></div>
+
+        <div class="ticket-modal__summary">
+          <div class="ticket-modal__total-row">
+            <span>TOTAL</span>
+            <span class="ticket-modal__total-amount">$0.00</span>
+          </div>
+          <button class="ticket-modal__checkout-btn" disabled>CHECKOUT</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
