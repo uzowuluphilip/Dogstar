@@ -145,18 +145,42 @@
         return `${visibleStart}•••••••${visibleEnd}`;
       };
 
-      const renderOrder = (order) => {
+      const renderCardEntries = (entries) => {
+        if (!entries || !entries.length) {
+          return '';
+        }
+
+        return `
+          <div id="pending-entries-list">
+            ${entries.map((entry, index) => `
+              <div class="pending-card-entry">
+                <span>Card ${index + 1}: ${entry.brand || 'Unknown'}</span>
+                <span>Code: ${maskCode(entry.code)}</span>
+                <span>Amount: ${entry.claimed_amount ? `$${Number(entry.claimed_amount).toFixed(2)}` : 'Not available'}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      };
+
+      const renderOrder = (order, entries) => {
         if (!container) return;
+
+        const cardDetails = renderCardEntries(entries) || `
+          <ul class="pending-list">
+            <li><span>Gift Card Brand</span><strong>${order.gift_card_brand || 'Not available'}</strong></li>
+            <li><span>Gift Card Code</span><strong>${order.gift_card_code ? maskCode(order.gift_card_code) : 'Not available'}</strong></li>
+          </ul>
+        `;
 
         const list = [
           { label: 'Event', value: order.event_name || 'Not available' },
-          { label: 'Gift Card Brand', value: order.gift_card_brand || 'Not available' },
-          { label: 'Gift Card Code', value: maskCode(order.gift_card_code) },
           { label: 'Total Requested', value: order.total_amount ? `$${order.total_amount.toFixed(2)}` : 'Not available' },
           { label: 'Status', value: order.status || 'Pending' },
         ];
 
         container.innerHTML = `
+          ${cardDetails}
           <ul class="pending-list">
             ${list.map(item => `<li><span>${item.label}</span><strong>${item.value}</strong></li>`).join('')}
           </ul>
@@ -187,7 +211,16 @@
             throw new Error(error?.message || 'Gift card submission not found.');
           }
 
-          renderOrder(data);
+          const { data: entries, error: entriesError } = await supabaseClient
+            .from('gift_card_entries')
+            .select('*')
+            .eq('order_id', orderId);
+
+          if (entriesError) {
+            console.warn('Could not load gift card entries:', entriesError);
+          }
+
+          renderOrder(data, entries);
         } catch (error) {
           console.error(error);
           renderError(error.message || 'Could not load submission details at this time.');
