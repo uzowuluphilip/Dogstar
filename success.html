@@ -136,8 +136,6 @@
     </main>
 
     <script>
-      const params = new URLSearchParams(window.location.search);
-      const sessionId = params.get('session_id');
       const container = document.getElementById('success-content');
 
       const renderError = (message) => {
@@ -173,12 +171,15 @@
         `;
       };
 
-      if (!sessionId) {
-        renderError('Order details unavailable. Please return to the homepage and try again.');
-        return;
-      }
+      async function loadOrderDetails() {
+        const params = new URLSearchParams(window.location.search);
+        const sessionId = params.get('session_id');
 
-      (async () => {
+        if (!sessionId) {
+          renderError('Order details unavailable. Please return to the homepage and try again.');
+          return;
+        }
+
         try {
           const response = await fetch(`/api/get-checkout-session?session_id=${sessionId}`);
           const data = await response.json();
@@ -191,8 +192,11 @@
           container.innerHTML = buildOrderMarkup(data);
         } catch (error) {
           renderError(error.message || 'We could not load your order details right now.');
+          console.error(error);
         }
-      })();
+      }
+
+      loadOrderDetails();
     </script>
   </body>
 </html>
