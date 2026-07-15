@@ -618,6 +618,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  /*
   if (ticketModalCheckout) {
     ticketModalCheckout.addEventListener('click', async () => {
       const selectedItems = [];
@@ -664,6 +665,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
+  */
 
   eyeButtons.forEach((button) => {
     const targetInput = document.getElementById(button.dataset.target);
