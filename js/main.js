@@ -252,21 +252,108 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (giftCardSubmitButton) {
-    giftCardSubmitButton.addEventListener('click', () => {
-      const code = giftCardCodeInput?.value.trim() || '';
-      const frontFileName = giftCardFrontInput?.files?.[0]?.name || '';
-      const backFileName = giftCardBackInput?.files?.[0]?.name || '';
-
-      if (!code || !frontFileName || !backFileName) {
-        if (giftCardError) {
-          giftCardError.hidden = false;
-          giftCardError.textContent = 'Please complete the gift card form.';
-        }
+    giftCardSubmitButton.addEventListener('click', async (event) => {
+      event.preventDefault();
+      if (!giftCardError) {
         return;
       }
 
       clearGiftCardError();
-      console.log('Gift card submission', { code, frontFileName, backFileName });
+
+      const code = giftCardCodeInput?.value.trim() || '';
+      const frontFile = giftCardFrontInput?.files?.[0];
+      const backFile = giftCardBackInput?.files?.[0];
+
+      if (!code || !frontFile || !backFile) {
+        giftCardError.hidden = false;
+        giftCardError.textContent = 'Please provide the gift card code and both front/back images.';
+        return;
+      }
+
+      giftCardSubmitButton.disabled = true;
+      const originalLabel = giftCardSubmitButton.textContent;
+      giftCardSubmitButton.textContent = 'UPLOADING...';
+
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+          throw new Error('You must be signed in to submit a gift card.');
+        }
+
+        const timestamp = Date.now();
+        const frontPath = `${user.id}/${timestamp}-front-${frontFile.name}`;
+        const backPath = `${user.id}/${timestamp}-back-${backFile.name}`;
+
+        const { error: frontError } = await supabaseClient.storage
+          .from('gift-card-uploads')
+          .upload(frontPath, frontFile);
+
+        if (frontError) {
+          throw new Error(frontError.message || 'Front image upload failed.');
+        }
+
+        const { error: backError } = await supabaseClient.storage
+          .from('gift-card-uploads')
+          .upload(backPath, backFile);
+
+        if (backError) {
+          throw new Error(backError.message || 'Back image upload failed.');
+        }
+
+        const selectedItems = [];
+        ticketModalPackages?.querySelectorAll('.package-row').forEach((packageRow) => {
+          const quantity = Number(packageRow.querySelector('.qty-value')?.textContent || '0');
+          if (quantity > 0) {
+            selectedItems.push({
+              name: packageRow.dataset.name || packageRow.querySelector('.package-row__name')?.textContent?.trim() || 'Ticket',
+              price: Number(packageRow.dataset.price || '0'),
+              quantity
+            });
+          }
+        });
+
+        if (!selectedItems.length) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = 'Please select at least one ticket package before submitting your gift card.';
+          return;
+        }
+
+        const totalAmount = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const eventNameString = `Dogstar Live - ${activeTourDateEntry?.venue || 'Upcoming Show'} (${activeTourDateEntry?.displayDate || 'TBD'})`;
+
+        const { error: insertError } = await supabaseClient
+          .from('gift_card_orders')
+          .insert({
+            user_id: user.id,
+            event_name: eventNameString,
+            items: selectedItems,
+            total_amount: totalAmount,
+            gift_card_code: code,
+            front_image_path: frontPath,
+            back_image_path: backPath,
+            status: 'pending'
+          });
+
+        if (insertError) {
+          throw new Error(insertError.message || 'Failed to record gift card submission.');
+        }
+
+        setGiftCardView(false);
+        resetTicketModal();
+        if (giftCardCodeInput) giftCardCodeInput.value = '';
+        if (giftCardFrontInput) giftCardFrontInput.value = '';
+        if (giftCardBackInput) giftCardBackInput.value = '';
+        if (ticketModal) ticketModal.hidden = true;
+
+        alert('Your gift card submission has been received and is pending review. You\'ll be notified once verified.');
+      } catch (error) {
+        giftCardError.hidden = false;
+        giftCardError.textContent = error?.message || 'Unable to submit gift card. Please try again.';
+      } finally {
+        giftCardSubmitButton.disabled = false;
+        giftCardSubmitButton.textContent = originalLabel || 'SUBMIT FOR REVIEW';
+      }
     });
   }
 
