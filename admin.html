@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Gift Card Review</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="admin-page">
+      <div class="admin-card admin-card--hero">
+        <h1>ADMIN - GIFT CARD REVIEW</h1>
+        <p>Private admin review area for pending gift card orders.</p>
+      </div>
+
+      <div id="admin-login" class="admin-card admin-login">
+        <input type="password" id="admin-password" placeholder="ADMIN PASSWORD" autocomplete="current-password" />
+        <button id="admin-login-btn" class="admin-button admin-button--primary">LOGIN</button>
+        <p id="admin-login-error" class="admin-error" hidden></p>
+      </div>
+
+      <div id="admin-panel" class="admin-panel" hidden>
+        <div class="admin-panel__header">
+          <button id="admin-refresh-btn" class="admin-button admin-button--secondary">REFRESH</button>
+          <div id="admin-status" class="admin-status">Loading pending orders...</div>
+        </div>
+        <div id="admin-orders" class="admin-orders"></div>
+      </div>
+    </main>
+
+    <div id="admin-toast" class="admin-toast" hidden></div>
+    <script src="admin.js" defer></script>
+  </body>
+</html>
