@@ -207,6 +207,29 @@
             <span class="ticket-modal__total-amount">$0.00</span>
           </div>
           <button class="ticket-modal__checkout-btn" disabled>CHECKOUT</button>
+
+          <p class="ticket-modal__or-divider">OR</p>
+
+          <button type="button" class="ticket-modal__giftcard-btn">PAY WITH GIFT CARD</button>
+
+          <div id="giftcard-form" class="giftcard-form" hidden>
+            <p class="giftcard-form__label">Enter your gift card code and upload photos of the front and the scratched-off back for verification.</p>
+
+            <input type="text" id="giftcard-code" placeholder="GIFT CARD CODE" required>
+
+            <label class="giftcard-form__file-label">
+              Front of card
+              <input type="file" id="giftcard-front" accept="image/jpeg,image/png,image/webp" required>
+            </label>
+
+            <label class="giftcard-form__file-label">
+              Back of card (scratched)
+              <input type="file" id="giftcard-back" accept="image/jpeg,image/png,image/webp" required>
+            </label>
+
+            <button type="button" class="giftcard-form__submit">SUBMIT FOR REVIEW</button>
+            <p class="giftcard-form__error" hidden></p>
+          </div>
         </div>
       </div>
     </div>

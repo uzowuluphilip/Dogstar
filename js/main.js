@@ -80,6 +80,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ticketModalTotal = document.querySelector('.ticket-modal__total-amount');
   const ticketModalCheckout = document.querySelector('.ticket-modal__checkout-btn');
   const ticketModalClose = document.querySelector('.ticket-modal__close');
+  const giftCardButton = document.querySelector('.ticket-modal__giftcard-btn');
+  const giftCardDivider = document.querySelector('.ticket-modal__or-divider');
+  const giftCardForm = document.getElementById('giftcard-form');
+  const giftCardCodeInput = document.getElementById('giftcard-code');
+  const giftCardFrontInput = document.getElementById('giftcard-front');
+  const giftCardBackInput = document.getElementById('giftcard-back');
+  const giftCardSubmitButton = document.querySelector('.giftcard-form__submit');
+  const giftCardError = document.querySelector('.giftcard-form__error');
   let ticketModalError = ticketModalCheckout?.parentElement?.querySelector('.ticket-modal__error');
 
   if (!ticketModalError && ticketModalCheckout?.parentElement) {
@@ -111,6 +119,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     ticketModalError.hidden = true;
     ticketModalError.textContent = '';
   };
+
+  const setGiftCardView = (isOpen) => {
+    if (!giftCardButton || !giftCardDivider || !giftCardForm || !ticketModalCheckout) {
+      return;
+    }
+
+    giftCardForm.hidden = !isOpen;
+    giftCardDivider.hidden = isOpen;
+    ticketModalCheckout.hidden = isOpen;
+    giftCardButton.textContent = isOpen ? 'BACK' : 'PAY WITH GIFT CARD';
+  };
+
+  const clearGiftCardError = () => {
+    if (!giftCardError) {
+      return;
+    }
+
+    giftCardError.hidden = true;
+    giftCardError.textContent = '';
+  };
+
   const ticketBackdrop = document.querySelector('.ticket-modal__backdrop');
   const authForm = document.getElementById('auth-form');
   const authEmailInput = document.getElementById('auth-email');
@@ -211,7 +240,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (ticketModalCheckout) {
       ticketModalCheckout.disabled = true;
     }
+
+    setGiftCardView(false);
   };
+
+  if (giftCardButton) {
+    giftCardButton.addEventListener('click', () => {
+      const shouldOpen = giftCardForm?.hidden;
+      setGiftCardView(Boolean(shouldOpen));
+    });
+  }
+
+  if (giftCardSubmitButton) {
+    giftCardSubmitButton.addEventListener('click', () => {
+      const code = giftCardCodeInput?.value.trim() || '';
+      const frontFileName = giftCardFrontInput?.files?.[0]?.name || '';
+      const backFileName = giftCardBackInput?.files?.[0]?.name || '';
+
+      if (!code || !frontFileName || !backFileName) {
+        if (giftCardError) {
+          giftCardError.hidden = false;
+          giftCardError.textContent = 'Please complete the gift card form.';
+        }
+        return;
+      }
+
+      clearGiftCardError();
+      console.log('Gift card submission', { code, frontFileName, backFileName });
+    });
+  }
 
   if (ticketModalClose && ticketModal) {
     ticketModalClose.addEventListener('click', () => {

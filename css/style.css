@@ -673,6 +673,133 @@ body {
   text-align: center;
 }
 
+/* GIFT CARD FORM styles */
+.ticket-modal__or-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.95rem 0 0.8rem;
+  color: #8f8f8f;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.ticket-modal__or-divider::before,
+.ticket-modal__or-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ticket-modal__giftcard-btn {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 1px solid #e63946;
+  border-radius: 999px;
+  background: transparent;
+  color: #e63946;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.ticket-modal__giftcard-btn:hover,
+.ticket-modal__giftcard-btn:focus-visible,
+.ticket-modal__giftcard-btn:active {
+  background-color: rgba(230, 57, 70, 0.12);
+  color: #ff6670;
+  transform: translateY(-1px);
+}
+
+.giftcard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.9rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.giftcard-form[hidden] {
+  display: none;
+}
+
+.giftcard-form__label {
+  margin: 0;
+  color: #b8b8b8;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+
+.giftcard-form input[type="text"] {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 1px solid #e63946;
+  border-radius: 999px;
+  background-color: #0f0f0f;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.giftcard-form input[type="text"]::placeholder {
+  color: #9b6b6d;
+  text-transform: uppercase;
+}
+
+.giftcard-form__file-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.8rem;
+  border: 1px dashed #e63946;
+  border-radius: 0.85rem;
+  background: rgba(0, 0, 0, 0.2);
+  color: #f0f0f0;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.giftcard-form__file-label input[type="file"] {
+  width: 100%;
+  color: #d8d8d8;
+}
+
+.giftcard-form__submit {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background-color: #e63946;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.giftcard-form__submit:hover,
+.giftcard-form__submit:focus-visible,
+.giftcard-form__submit:active {
+  background-color: #c52b39;
+}
+
+.giftcard-form__error {
+  margin: 0;
+  color: #ff8a8a;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
 /* TICKET MODAL styles */
 .ticket-modal {
   position: fixed;
