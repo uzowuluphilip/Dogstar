@@ -33,7 +33,7 @@
     "ticketsUrl": "#",
     "vipUrl": null,
     "packages": [
-      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." }
+      { "id": "ga", "name": "General Admission", "price": 2000, "currency": "USD", "description": "Standard entry to the show." }
     ]
   },
   {
@@ -343,7 +343,7 @@
     "ticketsUrl": "#",
     "vipUrl": null,
     "packages": [
-      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." }
+      { "id": "ga", "name": "General Admission", "price": 2000, "currency": "USD", "description": "Standard entry to the show." }
     ]
   }
 ]
