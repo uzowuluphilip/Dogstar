@@ -143,6 +143,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     giftCardButton.textContent = isOpen ? 'BACK' : 'PAY WITH GIFT CARD';
   };
 
+  const handleGiftCardButtonClick = () => {
+    const shouldOpen = giftCardForm?.hidden;
+
+    if (shouldOpen) {
+      resetGiftCardEntries();
+      if (giftCardOrderTotal && ticketModalTotal) {
+        giftCardOrderTotal.textContent = ticketModalTotal.textContent || '$0.00';
+      }
+      updateGiftCardTotals();
+    }
+
+    setGiftCardView(Boolean(shouldOpen));
+  };
+
   const clearGiftCardError = () => {
     if (!giftCardError) {
       return;
@@ -336,20 +350,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setGiftCardView(false);
   };
 
-  if (giftCardButton) {
-    giftCardButton.addEventListener('click', () => {
-      const shouldOpen = giftCardForm?.hidden;
-
-      if (shouldOpen) {
-        resetGiftCardEntries();
-        if (giftCardOrderTotal && ticketModalTotal) {
-          giftCardOrderTotal.textContent = ticketModalTotal.textContent || '$0.00';
-        }
-        updateGiftCardTotals();
-      }
-
-      setGiftCardView(Boolean(shouldOpen));
-    });
+  if (giftCardButton && !giftCardButton.dataset.giftCardWired) {
+    giftCardButton.dataset.giftCardWired = 'true';
+    giftCardButton.addEventListener('click', handleGiftCardButtonClick);
   }
 
   if (addGiftCardEntryButton) {
