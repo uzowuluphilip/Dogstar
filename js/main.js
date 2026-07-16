@@ -133,13 +133,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const setGiftCardView = (isOpen) => {
-    if (!giftCardButton || !giftCardDivider || !giftCardForm || !ticketModalCheckout) {
+    if (!giftCardButton || !giftCardDivider || !giftCardForm) {
       return;
     }
 
     giftCardForm.hidden = !isOpen;
     giftCardDivider.hidden = isOpen;
-    ticketModalCheckout.hidden = isOpen;
+
+    if (ticketModalCheckout) {
+      ticketModalCheckout.hidden = isOpen;
+    }
+
     giftCardButton.textContent = isOpen ? 'BACK' : 'PAY WITH GIFT CARD';
   };
 
