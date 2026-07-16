@@ -11,6 +11,17 @@ supabaseClient.auth.getSession().then((result) => {
 
 let activeTourDateEntry = null;
 
+const isExistingAccountError = (error) => {
+  const message = error?.message || error?.msg || '';
+  const code = error?.code || error?.error_code || '';
+  const normalizedCode = String(code).toLowerCase();
+
+  return normalizedCode === 'user_already_exists'
+    || normalizedCode === 'already_exists'
+    || normalizedCode === 'already_registered'
+    || (/already/i.test(message) && /(registered|exist|account)/i.test(message));
+};
+
 const openTicketModal = (tourDateEntry) => {
   const ticketModal = document.getElementById('ticket-modal');
   const ticketModalDate = document.querySelector('.ticket-modal__date');
@@ -704,10 +715,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
         if (error) {
-          const message = error.message || '';
-          const existingAccountError = /already/i.test(message) && /(registered|exist)/i.test(message);
-
-          if (existingAccountError) {
+          if (isExistingAccountError(error)) {
             const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
 
             if (loginError) {
@@ -722,7 +730,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
           }
 
-          setAuthMessage(error.message);
+          setAuthMessage(error.message || 'Unable to create your account.');
           return;
         }
 
