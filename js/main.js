@@ -727,6 +727,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (data?.session) {
+          fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'welcome',
+              to: email
+            })
+          }).catch(err => console.error('Welcome email failed:', err));
+
           finishAuth();
           console.log('Logged in successfully');
           return;

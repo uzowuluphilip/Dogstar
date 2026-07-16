@@ -1,74 +1,324 @@
 [
   {
-    "date": "2026-07-14",
-    "displayDate": "JUL 14, 2026",
-    "venue": "PORDENONE BLUES & CO. FESTIVAL",
-    "location": "PORDENONE, ITALY",
-    "ticketsUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator",
-    "vipUrl": "https://www.eventbrite.com/e/dogstar-live-tickets-1993856640886?aff=oddtdtcreator",
+    "date": "2026-07-17",
+    "displayDate": "JUL 17, 2026",
+    "venue": "GASOMETER",
+    "location": "VIENNA, AUSTRIA",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
     "packages": [
-      {
-        "id": "ga",
-        "name": "General Admission",
-        "price": 25.00,
-        "currency": "USD",
-        "description": "Standard entry to the show."
-      },
-      {
-        "id": "vip",
-        "name": "VIP Package",
-        "price": 75.00,
-        "currency": "USD",
-        "description": "Early entry, meet & greet, and exclusive merch bundle."
-      }
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-07-18",
+    "displayDate": "JUL 18, 2026",
+    "venue": "AKVÁRIUM KLUB",
+    "location": "BUDAPEST, HUNGARY",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-07-19",
+    "displayDate": "JUL 19, 2026",
+    "venue": "ELECTRIC CASTLE FESTIVAL",
+    "location": "CLUJ-NAPOCA, ROMANIA",
+    "ticketsUrl": "#",
+    "vipUrl": null,
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." }
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "displayDate": "AUG 01, 2026",
+    "venue": "ACL LIVE AT THE MOODY THEATER",
+    "location": "AUSTIN, TX",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
     ]
   },
   {
     "date": "2026-08-02",
     "displayDate": "AUG 02, 2026",
-    "venue": "PLACEHOLDER VENUE NAME",
-    "location": "PLACEHOLDER CITY, COUNTRY",
-    "ticketsUrl": "#",
-    "vipUrl": null,
-    "packages": [
-      {
-        "id": "ga",
-        "name": "General Admission",
-        "price": 30.00,
-        "currency": "USD",
-        "description": "Standard entry to the show."
-      },
-      {
-        "id": "vip",
-        "name": "VIP Package",
-        "price": 85.00,
-        "currency": "USD",
-        "description": "Priority entry and exclusive merch access."
-      }
-    ]
-  },
-  {
-    "date": "2026-09-19",
-    "displayDate": "SEP 19, 2026",
-    "venue": "PLACEHOLDER VENUE NAME",
-    "location": "PLACEHOLDER CITY, COUNTRY",
+    "venue": "THE PAVILION AT TOYOTA MUSIC FACTORY",
+    "location": "DALLAS, TX",
     "ticketsUrl": "#",
     "vipUrl": "#",
     "packages": [
-      {
-        "id": "ga",
-        "name": "General Admission",
-        "price": 28.00,
-        "currency": "USD",
-        "description": "Standard entry to the show."
-      },
-      {
-        "id": "vip",
-        "name": "VIP Package",
-        "price": 80.00,
-        "currency": "USD",
-        "description": "Premium seating and exclusive event access."
-      }
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-04",
+    "displayDate": "AUG 04, 2026",
+    "venue": "TABERNACLE",
+    "location": "ATLANTA, GA",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-05",
+    "displayDate": "AUG 05, 2026",
+    "venue": "RYMAN AUDITORIUM",
+    "location": "NASHVILLE, TN",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-07",
+    "displayDate": "AUG 07, 2026",
+    "venue": "THE RITZ",
+    "location": "RALEIGH, NC",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-08",
+    "displayDate": "AUG 08, 2026",
+    "venue": "THE NATIONAL",
+    "location": "RICHMOND, VA",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-11",
+    "displayDate": "AUG 11, 2026",
+    "venue": "9:30 CLUB",
+    "location": "WASHINGTON, D.C.",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-12",
+    "displayDate": "AUG 12, 2026",
+    "venue": "UNION TRANSFER",
+    "location": "PHILADELPHIA, PA",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-14",
+    "displayDate": "AUG 14, 2026",
+    "venue": "SOUND WAVES AT HARD ROCK HOTEL",
+    "location": "ATLANTIC CITY, NJ",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-15",
+    "displayDate": "AUG 15, 2026",
+    "venue": "GREAT CEDAR SHOWROOM - FOXWOODS RESORT CASINO",
+    "location": "MASHANTUCKET, CT",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-16",
+    "displayDate": "AUG 16, 2026",
+    "venue": "CITIZENS HOUSE OF BLUES BOSTON",
+    "location": "BOSTON, MA",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-18",
+    "displayDate": "AUG 18, 2026",
+    "venue": "HERSHEY THEATRE",
+    "location": "HERSHEY, PA",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-19",
+    "displayDate": "AUG 19, 2026",
+    "venue": "WEBSTER HALL",
+    "location": "NEW YORK, NY",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-21",
+    "displayDate": "AUG 21, 2026",
+    "venue": "FALLSVIEW CASINO",
+    "location": "NIAGARA FALLS, ON",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-22",
+    "displayDate": "AUG 22, 2026",
+    "venue": "SAINT ANDREW'S HALL",
+    "location": "DETROIT, MI",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-24",
+    "displayDate": "AUG 24, 2026",
+    "venue": "BOGART'S",
+    "location": "CINCINNATI, OH",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-25",
+    "displayDate": "AUG 25, 2026",
+    "venue": "EGYPTIAN ROOM AT OLD NATIONAL CENTRE",
+    "location": "INDIANAPOLIS, IN",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-27",
+    "displayDate": "AUG 27, 2026",
+    "venue": "THE FACTORY",
+    "location": "ST. LOUIS, MO",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-28",
+    "displayDate": "AUG 28, 2026",
+    "venue": "SILVER CREEK EVENT CENTER AT FOUR WINDS NEW BUFFALO",
+    "location": "NEW BUFFALO, MI",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-29",
+    "displayDate": "AUG 29, 2026",
+    "venue": "THE SYLVEE",
+    "location": "MADISON, WI",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-08-31",
+    "displayDate": "AUG 31, 2026",
+    "venue": "STEELHOUSE",
+    "location": "OMAHA, NE",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-09-02",
+    "displayDate": "SEP 02, 2026",
+    "venue": "SUMMIT MUSIC HALL",
+    "location": "DENVER, CO",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-09-03",
+    "displayDate": "SEP 03, 2026",
+    "venue": "THE COMPLEX",
+    "location": "SALT LAKE CITY, UT",
+    "ticketsUrl": "#",
+    "vipUrl": "#",
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." },
+      { "id": "vip", "name": "VIP Package", "price": 95.00, "currency": "USD", "description": "Early entry, meet & greet, and exclusive merch bundle." }
+    ]
+  },
+  {
+    "date": "2026-09-20",
+    "displayDate": "SEP 20, 2026",
+    "venue": "GRANDE EXPOSITION HALL",
+    "location": "RENO, NV",
+    "ticketsUrl": "#",
+    "vipUrl": null,
+    "packages": [
+      { "id": "ga", "name": "General Admission", "price": 35.00, "currency": "USD", "description": "Standard entry to the show." }
     ]
   }
 ]

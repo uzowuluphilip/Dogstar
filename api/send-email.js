@@ -48,6 +48,16 @@ module.exports = async function handler(req, res) {
           <p style="color:#999; font-size:12px;">Order ID: ${data.orderId}</p>
         </div>
       `;
+    } else if (type === 'welcome') {
+      subject = 'Welcome to Dogstar!';
+      html = `
+        <div style="font-family: Arial, sans-serif; background:#000; color:#fff; padding:24px;">
+          <h1 style="color:#e63946;">DOGSTAR</h1>
+          <h2>Welcome!</h2>
+          <p>Thanks for creating an account with us. You're all set to grab tickets for upcoming shows, get early access, and stay in the loop.</p>
+          <p>See you at a show soon.</p>
+        </div>
+      `;
     } else {
       return res.status(400).json({ error: 'Unknown email type' });
     }
