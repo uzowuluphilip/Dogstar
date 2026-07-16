@@ -133,12 +133,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const setGiftCardView = (isOpen) => {
-    if (!giftCardButton || !giftCardDivider || !giftCardForm) {
+    if (!giftCardButton || !giftCardForm) {
       return;
     }
 
     giftCardForm.hidden = !isOpen;
-    giftCardDivider.hidden = isOpen;
+
+    if (giftCardDivider) {
+      giftCardDivider.hidden = isOpen;
+    }
 
     if (ticketModalCheckout) {
       ticketModalCheckout.hidden = isOpen;
